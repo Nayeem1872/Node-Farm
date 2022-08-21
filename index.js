@@ -29,8 +29,13 @@ const data = fs.readFileSync(`${__dirname}/new.json`, 'utf-8');
 const dataObj = JSON.parse(data);
 
 const server = http.createServer((req, res)=>{
-    const pathName = req.url;
-    if(pathName==='/' || pathName === '/overview'){
+
+    // console.log(req.url);
+    // console.log(url.parse(req.url, true))
+    const { query, pathname } = url.parse(req.url, true);
+   
+    //overview-
+    if(pathname==='/' || pathname === '/overview'){ 
         res.writeHead(200,{'content-type':'text/html'});
 
         const cardsHtml = dataObj.map(el => replaceTemplate(tempCard, el)).join('');
@@ -38,17 +43,23 @@ const server = http.createServer((req, res)=>{
         // console.log(cardsHtml);
         res.end(output);
     }
-    else if(pathName==='/product'){
-        res.end('This is product');
-    }
-    
-    else if (pathname === '/api') {
+    //product-
+    else if (pathname === '/product') {
+      res.writeHead(200, {
+        'Content-type': 'text/html'
+      });
+      const product = dataObj[query.id];
+      const output = replaceTemplate(tempProduct, product);
+      res.end(output);
+    }  
+    //API-
+    else if (pathName === '/api') {
         res.writeHead(200, {
           'Content-type': 'application/json'
         });
         res.end(data);
     
-        // Not found
+      // Not found
       } else {
         res.writeHead(404, {
           'Content-type': 'text/html',
