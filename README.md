@@ -1,2 +1,2 @@
 # Node-Farm
-It's simple Node.js Web Application with api.
+It's a simple Node.js Web Application with api.
